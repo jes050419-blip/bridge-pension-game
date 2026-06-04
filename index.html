@@ -1069,121 +1069,11 @@
       .flash-active {
         animation: lightning-flash 0.7s ease-out;
       }
-.front-video-intro {
-  position: fixed;
-  inset: 0;
-  z-index: 20000;
-  background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  transition: opacity 0.9s ease, visibility 0.9s ease;
-}
-
-.front-video-intro.hide {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.front-video-intro video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  background: #000;
-}
-
-.front-video-dim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.72));
-  z-index: 2;
-  pointer-events: none;
-}
-
-.front-video-content {
-  position: relative;
-  z-index: 3;
-  width: min(760px, calc(100% - 36px));
-  text-align: center;
-  padding: 28px;
-}
-
-.front-video-kicker {
-  margin: 0 0 12px;
-  color: var(--accent);
-  letter-spacing: 0.28em;
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.front-video-title {
-  margin: 0;
-  font-family: 'Nanum Myeongjo', serif;
-  font-size: clamp(42px, 8vw, 92px);
-  line-height: 1;
-  color: #fff;
-  text-shadow: 0 8px 32px rgba(0,0,0,0.9);
-}
-
-.front-video-desc {
-  margin: 20px auto 0;
-  max-width: 620px;
-  color: rgba(240,245,252,0.84);
-  line-height: 1.8;
-  word-break: keep-all;
-}
-
-.front-start-btn {
-  margin-top: 34px;
-  border: 1px solid rgba(245,196,83,0.58);
-  background: rgba(245,196,83,0.18);
-  color: var(--accent);
-  border-radius: 999px;
-  padding: 16px 44px;
-  font-weight: 900;
-  font-size: 17px;
-  cursor: pointer;
-}
-
-.front-skip-btn {
-  position: absolute;
-  right: 20px;
-  bottom: 20px;
-  z-index: 4;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(0,0,0,0.32);
-  color: rgba(255,255,255,0.72);
-  border-radius: 999px;
-  padding: 10px 14px;
-  cursor: pointer;
-}    </style>
+    </style>
   </head>
   <body>
     <!-- Full-screen lightning flashing overlay -->
     <div id="lightningFlash" style="position: fixed; inset: 0; pointer-events: none; z-index: 9999; background: transparent;"></div>
-<!-- Front video intro screen -->
-<div id="frontVideoIntro" class="front-video-intro">
-  <video id="frontIntroVideo" autoplay muted playsinline>
-    <source src="/bridge-pension-game/bridge_intro.mp4" type="video/mp4">
-  </video>
-
-  <div class="front-video-dim"></div>
-
-  <div class="front-video-content">
-    <p class="front-video-kicker">MYSTERY ESCAPE GAME</p>
-    <h1 class="front-video-title">흔들다리 펜션</h1>
-    <p class="front-video-desc">
-      은서를 죽인 진범을 찾고, 폭우로 고립된 펜션에서 탈출하라.
-    </p>
-    <button class="front-start-btn" onclick="enterAfterVideo()">시작하기</button>
-  </div>
-
-  <button class="front-skip-btn" onclick="enterAfterVideo()">Skip</button>
-</div>
     <!-- Retro interactive opening cinematic sequence simulator -->
     <div id="openingSequence" class="opening-sequence-overlay">
       <div class="op-screen">
@@ -3317,28 +3207,6 @@
     // Default room render on load, but wait for cinematic overlay start to trigger active timer.
     render();
     updateAudioButton(false);
-  function enterAfterVideo() {
-  const front = document.getElementById("frontVideoIntro");
-  const video = document.getElementById("frontIntroVideo");
-
-  if (video) {
-    video.pause();
-  }
-
-  if (front) {
-    front.classList.add("hide");
-    setTimeout(() => {
-      front.style.display = "none";
-    }, 900);
-  }
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-  const video = document.getElementById("frontIntroVideo");
-
-  if (video) {
-    video.addEventListener("ended", enterAfterVideo);
-  }
-});</script>
+</script>
 </body>
 </html>
