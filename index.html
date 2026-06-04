@@ -1069,7 +1069,27 @@
       .flash-active {
         animation: lightning-flash 0.7s ease-out;
       }
-    </style>
+ .story-intro-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #000;
+}
+
+.story-video-skip {
+  position: absolute;
+  right: 22px;
+  bottom: 22px;
+  z-index: 20;
+  padding: 9px 18px;
+  font-size: 12px;
+  border-radius: 999px;
+  opacity: 0.78;
+}
+
+.story-video-skip:hover {
+  opacity: 1;
+}   </style>
   </head>
   <body>
     <!-- Full-screen lightning flashing overlay -->
@@ -1081,7 +1101,16 @@
           <div id="vhsNoise" class="vhs-noise"></div>
           <div class="vhs-glitch-line"></div>
           <div class="vhs-overlay-text"><span class="rec-dot"></span>REC 🔴 PLAY 00:00:02</div>
-          
+          <!-- Real intro video inside VHS frame -->
+<div id="opSlideVideo" class="op-slide" style="background: #000;">
+  <video id="storyIntroVideo" class="story-intro-video" playsinline>
+    <source src="/bridge-pension-game/bridge_intro.mp4" type="video/mp4">
+  </video>
+
+  <button onclick="dismissCinematic()" class="enter-btn story-video-skip">
+    Skip
+  </button>
+</div>
           <!-- Phase 1 Slide: Touch start/Unmute authorization -->
           <div id="opSlideStart" class="op-slide active" style="background: #020408; justify-content: center;">
             <h2 style="font-family: 'Nanum Myeongjo', serif; font-size: 32px; line-height: 1.6; margin-bottom: 24px; color: #ff5e5e; font-weight: 800; text-shadow: 0 0 10px rgba(255, 94, 94, 0.45); letter-spacing: 0.05em;">
@@ -2993,43 +3022,42 @@
       }
     }
 
-    function startCinematic() {
-      initSpookyAudio();
-      
-      document.getElementById("opSlideStart").classList.remove("active");
-      document.getElementById("opSlideTrip").classList.add("active");
-      
-      playCinematicSlowTension();
-      
-      // Update trip subtitle at 2.5 seconds
-      setTimeout(() => {
-        const tripSub = document.getElementById("tripSubtitle");
-        if (tripSub) {
-          tripSub.textContent = "그때까지만 해도, 우리 사이에 어떤 끔찍한 비밀이 숨겨져 있는지 아무도 눈치채지 못했다.";
-        }
-      }, 2500);
+   function showOnlyOpeningSlide(slideId) {
+  document.querySelectorAll("#openingSequence .op-slide").forEach((slide) => {
+    slide.classList.remove("active");
+  });
 
-      // Slide 3: Scream at 5 seconds
-      setTimeout(() => {
-        document.getElementById("opSlideTrip").classList.remove("active");
-        document.getElementById("opSlideScream").classList.add("active");
-        triggerLightningFlash();
-        playCinematicScream();
-      }, 5000);
+  const targetSlide = document.getElementById(slideId);
+  if (targetSlide) {
+    targetSlide.classList.add("active");
+  }
+}
 
-      // Slide 4: Whisper at 7 seconds
-      setTimeout(() => {
-        document.getElementById("opSlideScream").classList.remove("active");
-        document.getElementById("opSlideWhisper").classList.add("active");
-      }, 7000);
+function startCinematic() {
+  initSpookyAudio();
 
-      // Slide 5: Title Reveal at 9 seconds
-      setTimeout(() => {
-        document.getElementById("opSlideWhisper").classList.remove("active");
-        document.getElementById("opSlideTitle").classList.add("active");
-        triggerLightningFlash();
-      }, 9000);
+  showOnlyOpeningSlide("opSlideVideo");
+
+  const video = document.getElementById("storyIntroVideo");
+
+  if (video) {
+    video.currentTime = 0;
+    video.muted = false;
+
+    const playPromise = video.play();
+
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        video.muted = true;
+        video.play();
+      });
     }
+
+    video.onended = () => {
+      dismissCinematic();
+    };
+  }
+}
 
     function goToGuestList() {
       document.getElementById("opSlideTitle").classList.remove("active");
